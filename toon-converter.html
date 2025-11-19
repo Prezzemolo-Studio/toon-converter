@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOON Converter - Token Optimizer</title>
+    <title>TOON Converter</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -14,474 +14,292 @@
             box-sizing: border-box;
         }
 
+        /* Catppuccin Mocha Palette */
         :root {
-            --bg-gradient-start: #e8e4d9;
-            --bg-gradient-end: #c8d5d8;
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-            --accent-orange: #ffa726;
-            --accent-yellow: #ffb74d;
-            --accent-blue: #5c9eff;
-            --accent-purple: #9575cd;
-            --text-dark: #4a4a4a;
-            --text-light: #8b8b8b;
-            --sidebar-bg: rgba(255, 255, 255, 0.3);
-            --card-hover: rgba(255, 255, 255, 0.35);
+            --ctp-base: #1e1e2e;
+            --ctp-mantle: #181825;
+            --ctp-crust: #11111b;
+            --ctp-surface0: #313244;
+            --ctp-surface1: #45475a;
+            --ctp-surface2: #585b70;
+            --ctp-overlay0: #6c7086;
+            --ctp-overlay1: #7f849c;
+            --ctp-text: #cdd6f4;
+            --ctp-subtext1: #bac2de;
+            --ctp-subtext0: #a6adc8;
+            --ctp-blue: #89b4fa;
+            --ctp-lavender: #b4befe;
+            --ctp-sapphire: #74c7ec;
+            --ctp-sky: #89dceb;
+            --ctp-teal: #94e2d5;
+            --ctp-green: #a6e3a1;
+            --ctp-yellow: #f9e2af;
+            --ctp-peach: #fab387;
+            --ctp-mauve: #cba6f7;
+            --ctp-pink: #f5c2e7;
+            --ctp-red: #f38ba8;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--ctp-base);
+            color: var(--ctp-text);
+            line-height: 1.6;
             min-height: 100vh;
-            color: var(--text-dark);
-            overflow-x: hidden;
         }
 
-        /* Glassmorphism utility class */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-md);
-        }
-
-        .glass-light {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* Layout */
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-            padding: 2rem;
-            gap: 2rem;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 70px;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1.5rem 0;
-            border-radius: 50px;
-            align-items: center;
-        }
-
-        .sidebar-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.25rem;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar-icon:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(1.1);
-        }
-
-        .sidebar-icon.active {
-            background: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Main content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
 
         /* Header */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            gap: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ctp-mauve);
+            margin-bottom: 0.5rem;
         }
 
-        .avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.25rem;
+        .subtitle {
+            color: var(--ctp-subtext0);
+            font-size: 0.9375rem;
         }
 
-        .search-bar {
-            flex: 1;
-            max-width: 500px;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 0.875rem 1rem 0.875rem 3rem;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.3);
-            font-size: 0.875rem;
-            color: var(--text-dark);
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-input:focus {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(1.05);
-        }
-
-        /* Cards grid */
-        .cards-grid {
+        /* Stats */
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .card {
+        .stat-card {
+            background: var(--ctp-surface0);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--ctp-surface1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ctp-mauve);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card.savings .stat-value {
+            color: var(--ctp-green);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--ctp-subtext1);
+        }
+
+        /* Converter */
+        .converter {
+            background: var(--ctp-surface0);
+            border-radius: 16px;
             padding: 2rem;
-            border-radius: 24px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        /* Converter section */
-        .converter-section {
-            padding: 2rem;
-            border-radius: 32px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--ctp-surface1);
         }
 
         .converter-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .input-wrapper {
+        .input-group {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
         }
 
-        .input-label {
+        label {
+            font-weight: 600;
+            color: var(--ctp-text);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 600;
-            color: var(--text-dark);
+            font-size: 0.9375rem;
         }
 
-        .token-count {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            background: rgba(255, 255, 255, 0.4);
+        .token-badge {
+            background: var(--ctp-surface1);
+            color: var(--ctp-subtext1);
             padding: 0.25rem 0.75rem;
-            border-radius: 12px;
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
         }
 
         textarea {
             width: 100%;
-            min-height: 280px;
-            padding: 1.25rem;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            font-family: 'Monaco', 'Courier New', monospace;
+            min-height: 300px;
+            padding: 1rem;
+            background: var(--ctp-mantle);
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 12px;
+            color: var(--ctp-text);
+            font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', monospace;
             font-size: 0.875rem;
-            color: var(--text-dark);
             resize: vertical;
             outline: none;
-            transition: all 0.3s;
+            transition: border-color 0.2s;
         }
 
         textarea:focus {
-            background: rgba(255, 255, 255, 0.35);
-            border-color: var(--accent-orange);
+            border-color: var(--ctp-mauve);
         }
 
         textarea::placeholder {
-            color: var(--text-light);
-        }
-
-        /* Stats cards */
-        .stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            padding: 1.5rem;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow));
-        }
-
-        .stat-value {
-            font-size: 2.25rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .stat-card.savings {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(56, 142, 60, 0.1));
-        }
-
-        .stat-card.savings .stat-value {
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--ctp-overlay0);
         }
 
         /* Buttons */
-        .btn-group {
+        .button-row {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .btn {
-            padding: 0.875rem 2rem;
-            border-radius: 20px;
+            padding: 0.75rem 1.5rem;
             border: none;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 0.9375rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+            font-family: inherit;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-orange), var(--accent-yellow));
-            color: white;
+            background: var(--ctp-mauve);
+            color: var(--ctp-crust);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            background: var(--ctp-lavender);
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.4);
-            color: var(--text-dark);
-            border: 1px solid var(--glass-border);
+            background: var(--ctp-surface1);
+            color: var(--ctp-text);
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.6);
+            background: var(--ctp-surface2);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
+            background: var(--ctp-green);
+            color: var(--ctp-crust);
         }
 
-        /* Info box */
-        .info-box {
-            padding: 1.5rem;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.3);
-            border-left: 4px solid var(--accent-orange);
-            margin-bottom: 2rem;
+        .btn-success:hover {
+            background: var(--ctp-teal);
         }
 
-        .info-box h3 {
-            margin-bottom: 0.75rem;
-            color: var(--accent-orange);
-            font-size: 1.125rem;
-        }
-
-        .info-box ul {
-            margin-left: 1.5rem;
-            color: var(--text-dark);
-        }
-
-        .info-box li {
-            margin: 0.5rem 0;
+        /* Error */
+        .error {
+            background: var(--ctp-surface0);
+            border: 2px solid var(--ctp-red);
+            color: var(--ctp-red);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
         }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
+            color: var(--ctp-subtext0);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--ctp-surface1);
             margin-top: 3rem;
-            border-radius: 30px;
-            backdrop-filter: blur(20px);
+        }
+
+        .footer a {
+            color: var(--ctp-mauve);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            color: var(--ctp-lavender);
+            text-decoration: underline;
         }
 
         .footer-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            margin-top: 1rem;
+            display: inline-block;
+            margin: 1rem 0 0.5rem;
+            color: var(--ctp-subtext1);
         }
 
         /* Cookie Banner */
         .cookie-banner {
             position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            right: 2rem;
-            max-width: 600px;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            max-width: 500px;
             margin: 0 auto;
-            padding: 1.5rem;
-            border-radius: 24px;
-            backdrop-filter: blur(30px);
-            background: rgba(255, 255, 255, 0.5);
-            box-shadow: var(--shadow-lg);
+            background: var(--ctp-surface0);
+            border: 1px solid var(--ctp-surface1);
+            padding: 1.25rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             z-index: 1000;
-            animation: slideUp 0.4s ease-out;
+            animation: slideUp 0.3s ease-out;
         }
 
         @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .cookie-banner strong {
+            color: var(--ctp-text);
+            font-size: 0.9375rem;
+        }
+
+        .cookie-banner p {
+            color: var(--ctp-subtext1);
+            font-size: 0.875rem;
+            margin: 0.5rem 0 1rem;
         }
 
         .cookie-buttons {
             display: flex;
-            gap: 0.75rem;
-            margin-top: 1rem;
+            gap: 0.5rem;
         }
 
         /* Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2000;
-            padding: 2rem;
-            animation: fadeIn 0.3s;
+            padding: 1rem;
+            animation: fadeIn 0.2s;
         }
 
         @keyframes fadeIn {
@@ -490,112 +308,118 @@
         }
 
         .modal {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(40px);
-            border-radius: 32px;
+            background: var(--ctp-mantle);
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 16px;
             max-width: 700px;
             max-height: 85vh;
             overflow-y: auto;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
+            padding: 2rem;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--ctp-surface1);
+        }
+
+        .modal-header h2 {
+            color: var(--ctp-mauve);
         }
 
         .modal-close {
-            background: rgba(0, 0, 0, 0.05);
+            background: var(--ctp-surface1);
             border: none;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
+            color: var(--ctp-text);
             font-size: 1.5rem;
-            transition: all 0.3s;
+            line-height: 1;
+            transition: all 0.2s;
         }
 
         .modal-close:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: var(--ctp-surface2);
             transform: rotate(90deg);
         }
 
+        .privacy-content {
+            color: var(--ctp-text);
+        }
+
         .privacy-content h2 {
-            color: var(--accent-orange);
+            color: var(--ctp-mauve);
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
         }
 
+        .privacy-content p {
+            color: var(--ctp-subtext1);
+            margin-bottom: 1rem;
+        }
+
+        .privacy-content ul {
+            color: var(--ctp-subtext1);
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
         .gdpr-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
+            display: inline-block;
+            background: var(--ctp-green);
+            color: var(--ctp-crust);
             padding: 0.5rem 1rem;
-            border-radius: 20px;
+            border-radius: 8px;
             font-size: 0.875rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
 
-        /* Copy notification */
+        /* Copy Notification */
         .copy-notification {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
+            top: 1rem;
+            right: 1rem;
+            background: var(--ctp-green);
+            color: var(--ctp-crust);
             padding: 1rem 1.5rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             animation: slideInRight 0.3s ease-out;
             z-index: 3000;
         }
 
         @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
         }
 
         /* Responsive */
-        @media (max-width: 968px) {
-            .app-container {
-                flex-direction: column;
-                padding: 1rem;
-            }
-
-            .sidebar {
-                width: 100%;
-                flex-direction: row;
-                border-radius: 30px;
-                padding: 1rem;
-            }
-
+        @media (max-width: 768px) {
             .converter-grid {
                 grid-template-columns: 1fr;
             }
 
-            .stats-row {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats {
                 grid-template-columns: 1fr;
             }
 
-            .header {
+            .button-row {
                 flex-direction: column;
-                gap: 1rem;
             }
 
-            .search-bar {
-                max-width: 100%;
+            .btn {
+                width: 100%;
             }
         }
 
@@ -605,17 +429,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: var(--ctp-mantle);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 167, 38, 0.3);
-            border-radius: 10px;
+            background: var(--ctp-surface1);
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 167, 38, 0.5);
+            background: var(--ctp-surface2);
         }
     </style>
 </head>
@@ -625,13 +448,11 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Token estimation
         const estimateTokens = (text) => {
             if (!text) return 0;
             return Math.ceil(text.length / 4) + (text.match(/[.,!?;:(){}[\]"']/g) || []).length;
         };
 
-        // JSON → TOON conversion
         const jsonToToon = (jsonText) => {
             try {
                 const obj = JSON.parse(jsonText);
@@ -643,7 +464,6 @@
             }
         };
 
-        // TOON → JSON conversion
         const toonToJson = (toonText) => {
             try {
                 const obj = JSON.parse(toonText);
@@ -661,17 +481,17 @@
 
         function CookieBanner({ onAccept, onDecline }) {
             return (
-                <div className="cookie-banner glass">
-                    <strong>🍪 Privacy First</strong>
-                    <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', color: 'var(--text-light)' }}>
-                        Nessun tracking, solo elaborazione locale. Salvare le preferenze?
+                <div className="cookie-banner">
+                    <strong>Privacy</strong>
+                    <p>
+                        Nessun tracking. Salvare preferenze in locale?
                     </p>
                     <div className="cookie-buttons">
                         <button className="btn btn-secondary" onClick={onDecline}>
-                            Solo Necessari
+                            No
                         </button>
                         <button className="btn btn-primary" onClick={onAccept}>
-                            Accetta
+                            Sì
                         </button>
                     </div>
                 </div>
@@ -687,27 +507,27 @@
                             <button className="modal-close" onClick={onClose}>×</button>
                         </div>
                         <div className="privacy-content">
-                            <div className="gdpr-badge">✓ 100% GDPR COMPLIANT</div>
+                            <div className="gdpr-badge">✓ GDPR COMPLIANT</div>
                             
-                            <h2>1. Titolare del Trattamento</h2>
+                            <h2>Titolare del Trattamento</h2>
                             <p>
                                 <strong>Prezzemolo Studio</strong><br/>
                                 Pescara (PE), Italia<br/>
                                 Email: privacy@prezzemolostudio.it
                             </p>
 
-                            <h2>2. Dati Trattati</h2>
-                            <p>Questo strumento <strong>NON raccoglie alcun dato personale</strong>. Elaborazione 100% locale.</p>
+                            <h2>Dati Trattati</h2>
+                            <p>Nessun dato personale raccolto. Elaborazione 100% locale nel browser.</p>
 
-                            <h2>3. Diritti GDPR (Art. 15-22)</h2>
-                            <p>Hai diritto di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione.</p>
+                            <h2>Diritti GDPR</h2>
+                            <p>Accesso, rettifica, cancellazione, limitazione, portabilità, opposizione.</p>
                             <p>Contatto: privacy@prezzemolostudio.it</p>
 
-                            <h2>4. Cookie</h2>
-                            <p>Non utilizziamo cookie. Solo localStorage opzionale per preferenze.</p>
+                            <h2>Cookie</h2>
+                            <p>Nessun cookie. Solo localStorage opzionale per preferenze (con consenso).</p>
 
-                            <p style={{ marginTop: '2rem', fontSize: '0.875rem', color: 'var(--text-light)' }}>
-                                <strong>Ultimo aggiornamento:</strong> 19 Novembre 2025
+                            <p style={{ marginTop: '2rem', fontSize: '0.875rem' }}>
+                                Ultimo aggiornamento: 19 Novembre 2025
                             </p>
                         </div>
                     </div>
@@ -723,7 +543,7 @@
 
             return (
                 <div className="copy-notification">
-                    ✓ Copiato negli appunti!
+                    ✓ Copiato
                 </div>
             );
         }
@@ -796,167 +616,102 @@
                 const example = {
                     user: { name: "Mario Rossi", email: "mario@example.com" },
                     preferences: { theme: "dark", language: "it" },
-                    data: { items: [{ id: 1, status: "active" }] }
+                    data: [{ id: 1, status: "active" }]
                 };
                 setJsonInput(JSON.stringify(example, null, 2));
             };
 
             return (
                 <>
-                    <div className="app-container">
-                        {/* Sidebar */}
-                        <aside className="sidebar glass">
-                            <div className="sidebar-icon active">🏠</div>
-                            <div className="sidebar-icon">⚡</div>
-                            <div className="sidebar-icon">📊</div>
-                            <div className="sidebar-icon" onClick={() => setShowPrivacy(true)}>🔒</div>
-                        </aside>
+                    <div className="container">
+                        <header className="header">
+                            <h1>TOON Converter</h1>
+                            <p className="subtitle">
+                                Ottimizza JSON per ridurre i costi degli LLM fino al 50%
+                            </p>
+                        </header>
 
-                        {/* Main Content */}
-                        <main className="main-content">
-                            {/* Header */}
-                            <header className="header glass">
-                                <div className="user-info">
-                                    <div className="avatar">T</div>
-                                    <span style={{ fontWeight: 600 }}>TOON Converter</span>
-                                </div>
-                                <div className="search-bar">
-                                    <span className="search-icon">🔍</span>
-                                    <input 
-                                        type="text" 
-                                        className="search-input" 
-                                        placeholder="Ottimizza il tuo JSON..."
+                        <div className="stats">
+                            <div className="stat-card">
+                                <div className="stat-value">{jsonTokens}</div>
+                                <div className="stat-label">Token JSON</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-value">{toonTokens}</div>
+                                <div className="stat-label">Token TOON</div>
+                            </div>
+                            <div className="stat-card savings">
+                                <div className="stat-value">-{savedTokens}</div>
+                                <div className="stat-label">Risparmiati ({savingsPercent}%)</div>
+                            </div>
+                        </div>
+
+                        <div className="converter">
+                            <div className="converter-grid">
+                                <div className="input-group">
+                                    <label>
+                                        <span>JSON Input</span>
+                                        <span className="token-badge">{jsonTokens} token</span>
+                                    </label>
+                                    <textarea
+                                        value={jsonInput}
+                                        onChange={(e) => setJsonInput(e.target.value)}
+                                        placeholder='{"user": "Mario", "email": "mario@example.com"}'
                                     />
                                 </div>
-                                <div className="header-actions">
-                                    <button className="icon-btn">🌞</button>
-                                    <button className="icon-btn" onClick={() => setShowPrivacy(true)}>🔔</button>
-                                </div>
-                            </header>
 
-                            {/* Info Box */}
-                            <div className="info-box">
-                                <h3>🎯 Token-Optimized Object Notation</h3>
-                                <p style={{ marginBottom: '0.5rem' }}>
-                                    Riduci i costi degli LLM fino al 50% ottimizzando il formato JSON
-                                </p>
-                                <ul>
-                                    <li>✅ Elaborazione 100% locale - privacy garantita</li>
-                                    <li>✅ Nessun dato inviato a server esterni</li>
-                                    <li>✅ GDPR compliant · Made in Italy 🇮🇹</li>
-                                </ul>
-                            </div>
-
-                            {/* Stats */}
-                            <div className="stats-row">
-                                <div className="stat-card glass">
-                                    <div className="stat-value">{jsonTokens}</div>
-                                    <div className="stat-label">Token JSON</div>
-                                </div>
-                                <div className="stat-card glass">
-                                    <div className="stat-value">{toonTokens}</div>
-                                    <div className="stat-label">Token TOON</div>
-                                </div>
-                                <div className="stat-card glass savings">
-                                    <div className="stat-value">-{savedTokens}</div>
-                                    <div className="stat-label">Risparmiati ({savingsPercent}%)</div>
+                                <div className="input-group">
+                                    <label>
+                                        <span>TOON Output</span>
+                                        <span className="token-badge">{toonTokens} token</span>
+                                    </label>
+                                    <textarea
+                                        value={toonOutput}
+                                        onChange={(e) => setToonOutput(e.target.value)}
+                                        placeholder='{user:"Mario",email:"mario@example.com"}'
+                                    />
                                 </div>
                             </div>
 
-                            {/* Converter */}
-                            <section className="converter-section glass">
-                                <div className="converter-grid">
-                                    <div className="input-wrapper">
-                                        <div className="input-label">
-                                            <span>📝 JSON Input</span>
-                                            <span className="token-count">{jsonTokens} token</span>
-                                        </div>
-                                        <textarea
-                                            value={jsonInput}
-                                            onChange={(e) => setJsonInput(e.target.value)}
-                                            placeholder='{"user": "Mario", "email": "mario@example.com"}'
-                                        />
-                                    </div>
-
-                                    <div className="input-wrapper">
-                                        <div className="input-label">
-                                            <span>⚡ TOON Output</span>
-                                            <span className="token-count">{toonTokens} token</span>
-                                        </div>
-                                        <textarea
-                                            value={toonOutput}
-                                            onChange={(e) => setToonOutput(e.target.value)}
-                                            placeholder='{user:"Mario",email:"mario@example.com"}'
-                                        />
-                                    </div>
+                            {error && (
+                                <div className="error">
+                                    ⚠️ {error}
                                 </div>
+                            )}
 
-                                {error && (
-                                    <div style={{ 
-                                        background: 'rgba(244, 67, 54, 0.1)',
-                                        border: '2px solid rgba(244, 67, 54, 0.3)',
-                                        padding: '1rem',
-                                        borderRadius: '16px',
-                                        marginBottom: '1rem',
-                                        color: '#d32f2f'
-                                    }}>
-                                        ⚠️ {error}
-                                    </div>
+                            <div className="button-row">
+                                <button className="btn btn-primary" onClick={convertToToon}>
+                                    → Converti in TOON
+                                </button>
+                                <button className="btn btn-primary" onClick={convertToJson}>
+                                    ← Converti in JSON
+                                </button>
+                                {toonOutput && (
+                                    <button className="btn btn-success" onClick={copyToon}>
+                                        Copia
+                                    </button>
                                 )}
+                                <button className="btn btn-secondary" onClick={loadExample}>
+                                    Esempio
+                                </button>
+                                <button className="btn btn-secondary" onClick={clearAll}>
+                                    Pulisci
+                                </button>
+                            </div>
+                        </div>
 
-                                <div className="btn-group">
-                                    <button className="btn btn-primary" onClick={convertToToon}>
-                                        ➡️ Converti in TOON
-                                    </button>
-                                    <button className="btn btn-primary" onClick={convertToJson}>
-                                        ⬅️ Converti in JSON
-                                    </button>
-                                    {toonOutput && (
-                                        <button className="btn btn-success" onClick={copyToon}>
-                                            📋 Copia
-                                        </button>
-                                    )}
-                                    <button className="btn btn-secondary" onClick={loadExample}>
-                                        💡 Esempio
-                                    </button>
-                                    <button className="btn btn-secondary" onClick={clearAll}>
-                                        🗑️ Pulisci
-                                    </button>
-                                </div>
-                            </section>
-
-                            {/* Footer */}
-                            <footer className="footer glass-light">
-                                <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>
-                                    TOON Converter
-                                </p>
-                                <div className="footer-badge">
-                                    <span>🇪🇺</span>
-                                    <span>Fatto con ❤️ in Italia da <strong>Prezzemolo Studio</strong></span>
-                                </div>
-                                <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: 'var(--text-light)' }}>
-                                    <button 
-                                        onClick={() => setShowPrivacy(true)}
-                                        style={{ 
-                                            background: 'none',
-                                            border: 'none',
-                                            color: 'var(--accent-orange)',
-                                            textDecoration: 'underline',
-                                            cursor: 'pointer',
-                                            fontWeight: 600
-                                        }}
-                                    >
-                                        Privacy & GDPR
-                                    </button>
-                                    {' · '}
-                                    <a href="https://github.com/Prezzemolo-Studio/toon-converter" style={{ color: 'var(--accent-orange)' }}>
-                                        GitHub
-                                    </a>
-                                    {' · '}
-                                    Open Source (MIT)
-                                </p>
-                            </footer>
-                        </main>
+                        <footer className="footer">
+                            <div className="footer-badge">
+                                Made in Italy 🇮🇹 by <strong>Prezzemolo Studio</strong>
+                            </div>
+                            <div>
+                                <a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacy(true); }}>Privacy</a>
+                                {' · '}
+                                <a href="https://github.com/Prezzemolo-Studio/toon-converter" target="_blank">GitHub</a>
+                                {' · '}
+                                <span>100% GDPR Compliant</span>
+                            </div>
+                        </footer>
                     </div>
 
                     {showCookieBanner && (
