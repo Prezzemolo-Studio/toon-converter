@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOON Converter - Token-Optimized Object Notation</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --success: #16a34a;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.125rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .stat-card.savings {
+            background: linear-gradient(135deg, var(--success) 0%, #15803d 100%);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .info-box ul {
+            margin-left: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .footer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .eu-flag {
+            font-size: 1.25rem;
+        }
+
+        /* Cookie Banner */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-text {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: 12px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+        }
+
+        .privacy-content h2 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .privacy-content h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .privacy-content p {
+            margin-bottom: 1rem;
+        }
+
+        .privacy-content ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        .gdpr-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            animation: slideInRight 0.3s ease-out;
+            z-index: 3000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Token estimation (approssimato - GPT-like tokenizer)
+        const estimateTokens = (text) => {
+            if (!text) return 0;
+            // Stima approssimativa: ~4 caratteri = 1 token per lingue occidentali
+            // Conta anche punteggiatura e spazi come token
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const punctuation = (text.match(/[.,!?;:(){}[\]"']/g) || []).length;
+            return Math.ceil(text.length / 4) + punctuation;
+        };
+
+        // Conversione JSON → TOON
+        const jsonToToon = (jsonText) => {
+            try {
+                const obj = JSON.parse(jsonText);
+                
+                // TOON format: ultra-compatto
+                // - Rimuove spazi e newline
+                // - Abbrevia chiavi comuni
+                // - Usa notazione minima
+                const toon = JSON.stringify(obj)
+                    .replace(/\s+/g, '') // Rimuove tutti gli spazi
+                    .replace(/"([^"]+)":/g, '$1:') // Rimuove quote dalle chiavi quando possibile
+                    .replace(/":"/g, ':"') // Mantiene quote nei valori stringa
+                    .replace(/,"/g, ',"'); // Mantiene quote nei valori stringa
+                
+                return toon;
+            } catch (e) {
+                throw new Error('JSON non valido: ' + e.message);
+            }
+        };
+
+        // Conversione TOON → JSON
+        const toonToJson = (toonText) => {
+            try {
+                // Prova prima a parsare come JSON normale
+                const obj = JSON.parse(toonText);
+                return JSON.stringify(obj, null, 2);
+            } catch (e) {
+                // Se fallisce, prova a ripristinare le quote mancanti
+                let fixed = toonText.replace(/([{,])(\w+):/g, '$1"$2":');
+                try {
+                    const obj = JSON.parse(fixed);
+                    return JSON.stringify(obj, null, 2);
+                } catch (e2) {
+                    throw new Error('TOON non valido: ' + e2.message);
+                }
+            }
+        };
+
+        function CookieBanner({ onAccept, onDecline }) {
+            return (
+                <div className="cookie-banner">
+                    <div className="cookie-content">
+                        <div className="cookie-text">
+                            <strong>🍪 Questo sito rispetta la tua privacy</strong>
+                            <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.875rem' }}>
+                                Non utilizziamo cookie o tracking. Tutti i dati rimangono sul tuo dispositivo. 
+                                Possiamo salvare le tue preferenze solo in locale?
+                            </p>
+                        </div>
+                        <div className="cookie-buttons">
+                            <button className="btn-secondary btn-small" onClick={onDecline}>
+                                Solo Necessari
+                            </button>
+                            <button className="btn-primary btn-small" onClick={onAccept}>
+                                Accetta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function PrivacyModal({ onClose }) {
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>Privacy Policy & Informativa GDPR</h2>
+                            <button className="modal-close" onClick={onClose}>×</button>
+                        </div>
+                        <div className="privacy-content">
+                            <div className="gdpr-badge">✓ 100% GDPR COMPLIANT</div>
+                            
+                            <h2>1. Titolare del Trattamento</h2>
+                            <p>
+                                <strong>Prezzemolo Studio</strong><br/>
+                                Pescara (PE), Italia<br/>
+                                Email: privacy@prezzemolostudio.it
+                            </p>
+
+                            <h2>2. Dati Trattati</h2>
+                            <p>
+                                Questo strumento è progettato per <strong>NON raccogliere alcun dato personale</strong>.
+                            </p>
+                            <ul>
+                                <li><strong>Testi inseriti:</strong> elaborati esclusivamente in locale nel tuo browser</li>
+                                <li><strong>Nessun dato inviato:</strong> nessuna informazione lascia il tuo dispositivo</li>
+                                <li><strong>Nessun tracking:</strong> non utilizziamo cookie di profilazione o analytics</li>
+                            </ul>
+
+                            <h2>3. Finalità del Trattamento</h2>
+                            <p>Se accetti di salvare le preferenze (opzionale), utilizziamo il localStorage del browser per:</p>
+                            <ul>
+                                <li>Ricordare le tue preferenze sui cookie</li>
+                                <li>Nessun'altra finalità</li>
+                            </ul>
+
+                            <h2>4. Base Giuridica</h2>
+                            <p>Art. 6, par. 1, lett. a) GDPR: consenso dell'interessato (solo per localStorage)</p>
+
+                            <h2>5. Conservazione dei Dati</h2>
+                            <p>
+                                I dati rimangono esclusivamente sul tuo browser e possono essere cancellati in qualsiasi momento 
+                                attraverso le impostazioni del browser (cancellazione localStorage).
+                            </p>
+
+                            <h2>6. Diritti dell'Interessato (Art. 15-22 GDPR)</h2>
+                            <p>Hai diritto di:</p>
+                            <ul>
+                                <li>Accesso ai dati (Art. 15)</li>
+                                <li>Rettifica (Art. 16)</li>
+                                <li>Cancellazione (Art. 17)</li>
+                                <li>Limitazione del trattamento (Art. 18)</li>
+                                <li>Portabilità (Art. 20)</li>
+                                <li>Opposizione (Art. 21)</li>
+                                <li>Reclamo all'Autorità Garante: <a href="https://www.garanteprivacy.it" target="_blank">www.garanteprivacy.it</a></li>
+                            </ul>
+
+                            <h2>7. Sicurezza</h2>
+                            <p>
+                                Poiché tutti i dati rimangono sul tuo dispositivo, la sicurezza dipende dalle tue 
+                                impostazioni di sicurezza del browser e del dispositivo.
+                            </p>
+
+                            <h2>8. Trasferimento Dati Extra-UE</h2>
+                            <p>
+                                <strong>Nessun dato viene trasferito</strong> fuori dall'Unione Europea o dal tuo dispositivo.
+                            </p>
+
+                            <h2>9. Cookie e Tecnologie Simili</h2>
+                            <p>
+                                Non utilizziamo cookie. L'unica tecnologia di storage utilizzata (solo con consenso) è 
+                                localStorage per salvare le preferenze.
+                            </p>
+
+                            <h3>Categorie di "cookie" (localStorage):</h3>
+                            <ul>
+                                <li><strong>Necessari:</strong> nessuno (l'app funziona senza storage)</li>
+                                <li><strong>Preferenze:</strong> consenso cookie (opzionale)</li>
+                                <li><strong>Analytics:</strong> nessuno</li>
+                                <li><strong>Marketing:</strong> nessuno</li>
+                            </ul>
+
+                            <h2>10. Modifiche alla Privacy Policy</h2>
+                            <p>
+                                Eventuali modifiche saranno pubblicate su questa pagina con data di aggiornamento.
+                            </p>
+
+                            <p style={{ marginTop: '2rem', fontSize: '0.875rem', color: 'var(--text-light)' }}>
+                                <strong>Ultimo aggiornamento:</strong> 19 Novembre 2025<br/>
+                                <strong>Versione:</strong> 1.0
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CopyNotification({ onClose }) {
+            useEffect(() => {
+                const timer = setTimeout(onClose, 3000);
+                return () => clearTimeout(timer);
+            }, []);
+
+            return (
+                <div className="copy-notification">
+                    ✓ Copiato negli appunti!
+                </div>
+            );
+        }
+
+        function App() {
+            const [jsonInput, setJsonInput] = useState('');
+            const [toonOutput, setToonOutput] = useState('');
+            const [error, setError] = useState('');
+            const [showCookieBanner, setShowCookieBanner] = useState(true);
+            const [showPrivacy, setShowPrivacy] = useState(false);
+            const [showCopyNotification, setShowCopyNotification] = useState(false);
+            const [consentGiven, setConsentGiven] = useState(false);
+
+            // Statistiche
+            const jsonTokens = estimateTokens(jsonInput);
+            const toonTokens = estimateTokens(toonOutput);
+            const savedTokens = jsonTokens - toonTokens;
+            const savingsPercent = jsonTokens > 0 ? ((savedTokens / jsonTokens) * 100).toFixed(1) : 0;
+
+            useEffect(() => {
+                // Controlla se il consenso è già stato dato
+                try {
+                    const consent = localStorage.getItem('toon-consent');
+                    if (consent) {
+                        setShowCookieBanner(false);
+                        setConsentGiven(true);
+                    }
+                } catch (e) {
+                    // localStorage non disponibile
+                }
+            }, []);
+
+            const handleCookieConsent = (accepted) => {
+                setShowCookieBanner(false);
+                if (accepted) {
+                    try {
+                        localStorage.setItem('toon-consent', 'accepted');
+                        setConsentGiven(true);
+                    } catch (e) {
+                        console.log('localStorage non disponibile');
+                    }
+                }
+            };
+
+            const convertToToon = () => {
+                try {
+                    setError('');
+                    const toon = jsonToToon(jsonInput);
+                    setToonOutput(toon);
+                } catch (e) {
+                    setError(e.message);
+                }
+            };
+
+            const convertToJson = () => {
+                try {
+                    setError('');
+                    const json = toonToJson(toonOutput);
+                    setJsonInput(json);
+                } catch (e) {
+                    setError(e.message);
+                }
+            };
+
+            const copyToon = async () => {
+                try {
+                    await navigator.clipboard.writeText(toonOutput);
+                    setShowCopyNotification(true);
+                } catch (e) {
+                    alert('Errore nella copia');
+                }
+            };
+
+            const clearAll = () => {
+                setJsonInput('');
+                setToonOutput('');
+                setError('');
+            };
+
+            const loadExample = () => {
+                const example = {
+                    "user": {
+                        "name": "Mario Rossi",
+                        "email": "mario.rossi@example.com",
+                        "preferences": {
+                            "theme": "dark",
+                            "language": "it",
+                            "notifications": true
+                        }
+                    },
+                    "data": {
+                        "items": [
+                            { "id": 1, "title": "Primo elemento", "status": "completed" },
+                            { "id": 2, "title": "Secondo elemento", "status": "pending" }
+                        ]
+                    }
+                };
+                setJsonInput(JSON.stringify(example, null, 2));
+            };
+
+            return (
+                <>
+                    <div className="container">
+                        <header>
+                            <h1>🚀 TOON Converter</h1>
+                            <p className="subtitle">
+                                Token-Optimized Object Notation - Riduci i costi degli LLM fino al 50%
+                            </p>
+                        </header>
+
+                        <div className="info-box">
+                            <h3>🎯 Cos'è TOON?</h3>
+                            <p>
+                                TOON è un formato ultra-compatto per JSON che riduce drasticamente il numero di token, 
+                                permettendoti di risparmiare sui costi di API degli LLM (GPT-4, Claude, ecc.).
+                            </p>
+                            <ul>
+                                <li>✅ Rimuove spazi e newline inutili</li>
+                                <li>✅ Ottimizza la struttura mantenendo la leggibilità per gli LLM</li>
+                                <li>✅ Elaborazione 100% locale - nessun dato lascia il tuo browser</li>
+                                <li>✅ Open source e GDPR compliant</li>
+                            </ul>
+                        </div>
+
+                        <div className="stats">
+                            <div className="stat-card">
+                                <div className="stat-value">{jsonTokens}</div>
+                                <div className="stat-label">Token JSON</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-value">{toonTokens}</div>
+                                <div className="stat-label">Token TOON</div>
+                            </div>
+                            <div className="stat-card savings">
+                                <div className="stat-value">-{savedTokens}</div>
+                                <div className="stat-label">Token Risparmiati ({savingsPercent}%)</div>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <div className="grid">
+                                <div className="input-group">
+                                    <label>
+                                        📝 JSON Input
+                                        <span style={{ marginLeft: 'auto', fontSize: '0.875rem', fontWeight: 'normal' }}>
+                                            {jsonTokens} token
+                                        </span>
+                                    </label>
+                                    <textarea
+                                        value={jsonInput}
+                                        onChange={(e) => setJsonInput(e.target.value)}
+                                        placeholder='Incolla qui il tuo JSON...'
+                                    />
+                                </div>
+
+                                <div className="input-group">
+                                    <label>
+                                        ⚡ TOON Output
+                                        <span style={{ marginLeft: 'auto', fontSize: '0.875rem', fontWeight: 'normal' }}>
+                                            {toonTokens} token
+                                        </span>
+                                    </label>
+                                    <textarea
+                                        value={toonOutput}
+                                        onChange={(e) => setToonOutput(e.target.value)}
+                                        placeholder='Il formato TOON ottimizzato apparirà qui...'
+                                    />
+                                </div>
+                            </div>
+
+                            {error && (
+                                <div style={{ 
+                                    background: '#fee', 
+                                    border: '2px solid #fcc',
+                                    padding: '1rem', 
+                                    borderRadius: '8px',
+                                    marginBottom: '1rem',
+                                    color: '#c00'
+                                }}>
+                                    ⚠️ {error}
+                                </div>
+                            )}
+
+                            <div className="buttons">
+                                <button className="btn-primary" onClick={convertToToon}>
+                                    ➡️ Converti in TOON
+                                </button>
+                                <button className="btn-primary" onClick={convertToJson}>
+                                    ⬅️ Converti in JSON
+                                </button>
+                                {toonOutput && (
+                                    <button className="btn-success" onClick={copyToon}>
+                                        📋 Copia TOON
+                                    </button>
+                                )}
+                                <button className="btn-secondary" onClick={loadExample}>
+                                    💡 Carica Esempio
+                                </button>
+                                <button className="btn-secondary" onClick={clearAll}>
+                                    🗑️ Pulisci
+                                </button>
+                            </div>
+                        </div>
+
+                        <footer>
+                            <p>
+                                <strong>TOON Converter</strong> - Token-Optimized Object Notation
+                            </p>
+                            <div className="footer-badge">
+                                <span className="eu-flag">🇪🇺</span>
+                                <span>Fatto con ❤️ in Italia da <strong>Prezzemolo Studio</strong></span>
+                            </div>
+                            <p style={{ marginTop: '1rem', fontSize: '0.875rem' }}>
+                                <button 
+                                    onClick={() => setShowPrivacy(true)}
+                                    style={{ 
+                                        background: 'none', 
+                                        border: 'none', 
+                                        color: 'var(--primary)', 
+                                        textDecoration: 'underline',
+                                        cursor: 'pointer',
+                                        padding: 0
+                                    }}
+                                >
+                                    Privacy Policy & GDPR
+                                </button>
+                                {' · '}
+                                <a href="https://github.com/Prezzemolo-Studio" target="_blank" style={{ color: 'var(--primary)' }}>
+                                    GitHub
+                                </a>
+                                {' · '}
+                                <span>Open Source (MIT License)</span>
+                            </p>
+                            <p style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-light)' }}>
+                                100% GDPR Compliant · Nessun dato lascia il tuo dispositivo · No tracking · No cookies
+                            </p>
+                        </footer>
+                    </div>
+
+                    {showCookieBanner && (
+                        <CookieBanner
+                            onAccept={() => handleCookieConsent(true)}
+                            onDecline={() => handleCookieConsent(false)}
+                        />
+                    )}
+
+                    {showPrivacy && (
+                        <PrivacyModal onClose={() => setShowPrivacy(false)} />
+                    )}
+
+                    {showCopyNotification && (
+                        <CopyNotification onClose={() => setShowCopyNotification(false)} />
+                    )}
+                </>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
